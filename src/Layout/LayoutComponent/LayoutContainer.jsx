@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 const LayoutContainer = ({children}) => {
   return (
-    <div className="max-w-screen-xl mx-4 md:mx-6 lg:mx-8 xl:mx-12 2xl:mx-auto">
+    <div className="max-w-screen-xl mx-4 xl:mx-auto">
       {children}
     </div>
   );

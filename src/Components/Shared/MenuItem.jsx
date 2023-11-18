@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 const MenuItem = ({ menu }) => {
   return (
     <div className="flex items-center gap-4">
-      <div className="h-20">
+      <div className="h-24 aspect-square">
         <img
           className="w-full h-full object-cover rounded-full rounded-tl-none"
           src={menu?.image}

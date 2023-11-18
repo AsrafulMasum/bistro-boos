@@ -1,18 +1,18 @@
 import SectionBanner from "../../Components/Shared/SectionBanner";
 import Banner from "./Banner";
-// import OrderSection from "./OrderSection";
+import OrderSection from "./OrderSection";
 import bg from "./../../assets/home/chef-service.jpg";
 import MenuSection from "./MenuSection";
 import Recommended from "./Recommended";
 import Call from "./Call";
 import Featured from "./Featured";
-// import Reviews from "./Reviews";
+import Reviews from "./Reviews";
 
 const Home = () => {
   return (
     <div>
       <Banner></Banner>
-      {/* <OrderSection></OrderSection> */}
+      <OrderSection></OrderSection>
       <SectionBanner
         title="bistro boss"
         img={bg}
@@ -26,7 +26,7 @@ const Home = () => {
       <Call></Call>
       <Recommended></Recommended>
       <Featured></Featured>
-      {/* <Reviews></Reviews> */}
+      <Reviews></Reviews>
     </div>
   );
 };

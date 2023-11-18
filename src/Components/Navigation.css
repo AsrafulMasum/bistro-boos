@@ -4,10 +4,15 @@ ul li a.active {
   font-weight: 700;
   text-decoration: underline;
 }
+ul li a.active:hover {
+  color: #d99904 !important;
+  font-weight: 700;
+}
 
 ul li a:hover {
   background: none !important;
   font-weight: 500;
+  color: #ffffff !important;
 }
 
 ul li a {
