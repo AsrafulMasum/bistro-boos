@@ -16,6 +16,7 @@ const Home = () => {
       <SectionBanner
         title="bistro boss"
         img={bg}
+        bg={true}
         description="Lorem ipsum dolor sit amet consectetur adipisicing elit.
           Necessitatibus, libero accusamus laborum deserunt ratione dolor
           officiis praesentium! Deserunt magni aperiam dolor eius dolore at,

@@ -3,15 +3,15 @@ import PropTypes from "prop-types";
 const MenuItem = ({ menu }) => {
   return (
     <div className="flex items-center gap-4">
-      <div>
+      <div className="h-20">
         <img
-          className="w-28 h-20 object-cover rounded-full rounded-tl-none"
+          className="w-full h-full object-cover rounded-full rounded-tl-none"
           src={menu?.image}
           alt=""
         />
       </div>
-      <div className="flex">
-        <div>
+      <div className="flex justify-between">
+        <div className="text-left">
           <h3 className="font-[Cinzel] text-xl">{menu?.name}-----------------</h3>
           <p className="text-text-secondary">{menu?.recipe}</p>
         </div>

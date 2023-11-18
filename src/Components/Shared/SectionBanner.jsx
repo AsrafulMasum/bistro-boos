@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 
-const SectionBanner = ({title, img, description}) => {
+const SectionBanner = ({title, img, description, bg, pt}) => {
   return (
-    <div className='p-20'
+    <div className={pt ? 'px-20 pb-20 pt-40' : 'p-20'}
       style={{
         background: `url(${img})`,
         backgroundRepeat: "no-repeat",
@@ -13,7 +13,9 @@ const SectionBanner = ({title, img, description}) => {
         backgroundBlendMode: "overlay",
       }}
     >
-      <div className="bg-white p-20 text-center space-y-2">
+      <div className={
+        bg ? "bg-white p-20 text-center space-y-2" : "bg-[#15151599] p-20 text-center space-y-2 text-white"
+      }>
         <h3 className='text-3xl font-bold uppercase'>{title}</h3>
         <p>
           {description}
@@ -29,4 +31,6 @@ SectionBanner.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   img: PropTypes.any,
+  bg: PropTypes.bool,
+  pt: PropTypes.bool,
 }
