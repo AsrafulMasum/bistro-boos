@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
+  GithubAuthProvider,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -17,7 +18,8 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const provider = new GoogleAuthProvider();
+  const googleProvider = new GoogleAuthProvider();
+  const githubProvider = new GithubAuthProvider();
 
   const signUpWithEmail = (email, password) => {
     setLoading(true);
@@ -31,7 +33,12 @@ const AuthProvider = ({ children }) => {
 
   const logInWithGoogle = () => {
     setLoading(true);
-    return signInWithPopup(auth, provider);
+    return signInWithPopup(auth, googleProvider);
+  };
+
+  const logInWithGithub = () => {
+    setLoading(true);
+    return signInWithPopup(auth, githubProvider);
   };
 
   const updateUser = (name, photo) => {
@@ -62,6 +69,7 @@ const AuthProvider = ({ children }) => {
     signUpWithEmail,
     logInWithEmail,
     logInWithGoogle,
+    logInWithGithub,
     updateUser,
     logOut,
   };

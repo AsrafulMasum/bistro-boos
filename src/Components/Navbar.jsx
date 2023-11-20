@@ -1,15 +1,11 @@
 import { Link, NavLink } from "react-router-dom";
 import "./Navigation.css";
 import LayoutContainer from "./../Layout/LayoutComponent/LayoutContainer";
-import { useContext } from "react";
-import { AuthContext } from "../Provider/AuthProvider";
+import UserDropdown from "./UserDropdown";
+import useAuth from "../Hooks/useAuth";
 
 const Navbar = () => {
-  const { user, logOut } = useContext(AuthContext);
-
-  const handleLogout = () => {
-    logOut().then();
-  };
+  const { user } = useAuth();
 
   const navLinks = (
     <>
@@ -66,40 +62,7 @@ const Navbar = () => {
           </div>
           <div>
             {user ? (
-              <div className="dropdown dropdown-end">
-                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                  <div className="w-10 rounded-full">
-                    <img
-                      alt="Tailwind CSS Navbar component"
-                      src={user?.photoURL}
-                    />
-                  </div>
-                </label>
-                <ul
-                  tabIndex={0}
-                  className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-slate-400 rounded-box w-52"
-                >
-                  <li>
-                    <Link className="justify-between text-black">
-                      Profile({user?.displayName.split(" ")[0]})
-                      <span className="badge">New</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="text-black">
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={handleLogout}
-                      className="bg-nav-color text-white mt-1"
-                    >
-                      Logout
-                    </button>
-                  </li>
-                </ul>
-              </div>
+              <UserDropdown></UserDropdown>
             ) : (
               <Link
                 to="/logIn"
