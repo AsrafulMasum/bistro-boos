@@ -1,24 +1,15 @@
-import { useEffect, useState } from "react";
 import MenuItem from "../../Components/Shared/MenuItem";
-
-
+import useLoadPublicData from "../../Hooks/useLoadPublicData";
 
 const Offer = () => {
-
-  const [allMenus, setAllMenus] = useState([]);
-  useEffect(() => {
-    fetch("/menu.json")
-      .then((res) => res.json())
-      .then((data) => setAllMenus(data));
-  }, []);
-
-  const offeredMenu = allMenus.filter((menu) => menu?.category === "offered");
+  const offeredUrl = "/menus?category=pizza";
+  const { data: offeredMenu } = useLoadPublicData(offeredUrl);
 
   return (
     <div className="grid grid-cols-2 gap-10 my-10">
-      {
-        offeredMenu?.map(menu => <MenuItem key={menu?._id} menu={menu}></MenuItem>)
-      }
+      {offeredMenu?.map((menu) => (
+        <MenuItem key={menu?._id} menu={menu}></MenuItem>
+      ))}
     </div>
   );
 };

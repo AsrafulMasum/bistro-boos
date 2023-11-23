@@ -27,7 +27,7 @@ const UserDropdown = () => {
             </Link>
           </li>
           <li>
-            <Link className="text-black">Dashboard</Link>
+            <Link to="/dashboard" className="text-black">Dashboard</Link>
           </li>
           <li>
             <button

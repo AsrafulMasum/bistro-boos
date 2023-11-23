@@ -1,4 +1,3 @@
-import { FaFacebookF, FaGithub, FaGoogle } from "react-icons/fa";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import img from "../../assets/others/authentication.png";
@@ -9,16 +8,18 @@ import {
   validateCaptcha,
 } from "react-simple-captcha";
 import Swal from "sweetalert2";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
+import SocialLogin from "../../Components/Shared/SocialLogin";
+import { ImSpinner9 } from "react-icons/im";
 
 const LogIn = () => {
   const [show, setShow] = useState(false);
   const captchaRef = useRef();
   const navigate = useNavigate();
-  const { logInWithEmail, logInWithGoogle, logInWithGithub } = useAuth();
+  const location = useLocation()
+  const { logInWithEmail, loading } = useAuth();
 
   const { register, handleSubmit } = useForm();
 
@@ -27,7 +28,7 @@ const LogIn = () => {
     if (validateCaptcha(user_captcha_value, false) == true) {
       try {
         logInWithEmail(data?.email, data?.password).then(() => {
-          navigate("/");
+          navigate(location?.state?.from?.pathname ? location?.state?.from?.pathname : "/");
         });
       } catch (error) {
         console.log(error);
@@ -40,28 +41,6 @@ const LogIn = () => {
         showConfirmButton: false,
         timer: 1500,
       });
-    }
-  };
-
-  const handleGoogle = async () => {
-    try {
-      logInWithGoogle().then(() => {
-        toast.success("Log In Successful.");
-        navigate("/");
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleGithub = async () => {
-    try {
-      logInWithGithub().then(() => {
-        toast.success("Log In Successful.");
-        navigate("/");
-      });
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -118,25 +97,26 @@ const LogIn = () => {
               </div>
             </div>
 
-            <div className="mt-4">
-              <label htmlFor="captcha">
-                <LoadCanvasTemplate />
-              </label>
-              <input
-                ref={captchaRef}
-                id="captcha"
-                className="w-full h-11 outline-none px-5 bg-white border border-[#D0D0D0] rounded"
-                type="text"
-                placeholder="Captcha"
-                required
-              />
+            <div className="mt-4 border bg-white border-[#D0D0D0] rounded h-11 pt-3">
+              <LoadCanvasTemplate />
             </div>
 
             <input
-              className="btn w-full mt-4 bg-[#D1A054B3] hover:bg-[#D1A054B3] rounded"
-              type="submit"
-              value="Log In"
+              ref={captchaRef}
+              id="captcha"
+              className="w-full h-11 outline-none px-5 mt-8 bg-white border border-[#D0D0D0] rounded"
+              type="text"
+              placeholder="Captcha"
+              required
             />
+
+            <button className="btn w-full mt-4 bg-[#D1A054B3] hover:bg-[#D1A054B3] rounded">
+              {loading ? (
+                <ImSpinner9 className="animate-spin text-lg"></ImSpinner9>
+              ) : (
+                "Log In"
+              )}
+            </button>
           </form>
           <div className="w-2/3 mx-auto my-4 text-center">
             <p>
@@ -146,23 +126,7 @@ const LogIn = () => {
               </Link>
             </p>
             <p>Or Sign In With</p>
-            <div className="mt-4 flex justify-center items-center gap-16">
-              <button className="btn btn-circle btn-outline btn-sm">
-                <FaFacebookF></FaFacebookF>
-              </button>
-              <button
-                onClick={handleGoogle}
-                className="btn btn-circle btn-outline btn-sm"
-              >
-                <FaGoogle></FaGoogle>
-              </button>
-              <button
-                onClick={handleGithub}
-                className="btn btn-circle btn-outline btn-sm"
-              >
-                <FaGithub></FaGithub>
-              </button>
-            </div>
+            <SocialLogin></SocialLogin>
           </div>
         </div>
       </div>

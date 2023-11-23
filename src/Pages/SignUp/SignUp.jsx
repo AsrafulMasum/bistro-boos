@@ -2,33 +2,35 @@ import { useForm } from "react-hook-form";
 import img from "../../assets/others/authentication.png";
 import img2 from "../../assets/others/authentication2.png";
 import { Link, useNavigate } from "react-router-dom";
-import { FaFacebookF, FaGithub, FaGoogle } from "react-icons/fa";
+
 import { BsEye, BsEyeSlash } from "react-icons/bs";
-import axios from "axios";
+import { ImSpinner9 } from "react-icons/im";
 import { toast } from "react-toastify";
 import useAuth from "../../Hooks/useAuth";
 import { useState } from "react";
+import SocialLogin from "../../Components/Shared/SocialLogin";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 const imgHostingKey = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const imgHostingApi = `https://api.imgbb.com/1/upload?key=${imgHostingKey}`;
 
 const SignUp = () => {
-  const {
-    signUpWithEmail,
-    logInWithGoogle,
-    logInWithGithub,
-    updateUser,
-    logOut,
-  } = useAuth();
+  const { signUpWithEmail, updateUser, logOut, loading, setLoading } = useAuth();
+  const axiosPublic = useAxiosPublic();
   const [show, setShow] = useState(false);
 
   const navigate = useNavigate();
 
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const onSubmit = async (data) => {
+    setLoading(true)
     const imageFile = { image: data?.image[0] };
-    const res = await axios.post(imgHostingApi, imageFile, {
+    const res = await axiosPublic.post(imgHostingApi, imageFile, {
       headers: {
         "content-type": "multipart/form-data",
       },
@@ -39,16 +41,35 @@ const SignUp = () => {
       try {
         signUpWithEmail(data?.email, data?.password).then((response) => {
           if (response?.user?.email) {
+            toast.success("Profile Created.");
             try {
               updateUser(data?.name, photo).then(() => {
                 toast.success("Profile Updated.");
-                try {
-                  logOut().then(() => {
-                    navigate("/logIn");
+                const user = {
+                  email: data?.email,
+                  name: data?.name,
+                  photoURL: photo,
+                  role: "user",
+                };
+                axiosPublic
+                  .put("/users", user)
+                  .then((res) => {
+                    if (
+                      res?.data?.upsertedCount ||
+                      res?.data?.modifiedCount
+                    ) {
+                      try {
+                        logOut().then(() => {
+                          navigate("/logIn");
+                        });
+                      } catch (error) {
+                        console.log(error);
+                      }
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err);
                   });
-                } catch (error) {
-                  console.log(error);
-                }
               });
             } catch (error) {
               console.log(error);
@@ -58,28 +79,6 @@ const SignUp = () => {
       } catch (error) {
         console.log(error);
       }
-    }
-  };
-
-  const handleGoogle = async () => {
-    try {
-      logInWithGoogle().then(() => {
-        toast.success("Log In Successful.");
-        navigate("/");
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleGithub = async () => {
-    try {
-      logInWithGithub().then(() => {
-        toast.success("Log In Successful.");
-        navigate("/");
-      });
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -142,12 +141,28 @@ const SignUp = () => {
 
               <div className="relative">
                 <input
-                  {...register("password", { required: true })}
+                  {...register("password", {
+                    required: true,
+                    pattern:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/,
+                  })}
+                  aria-invalid={errors.password ? "true" : "false"}
                   className="w-full h-11 outline-none px-5 mt-4 bg-white border border-[#D0D0D0] rounded"
                   type={show ? "text" : "password"}
                   placeholder="Password"
                   required
                 />
+                {errors?.password?.type === "pattern" && (
+                  <p className="mt-2 mx-1 text-red-600">
+                    Password must have one uppercase, one lowercase, one special
+                    characters & one number
+                  </p>
+                )}
+                {errors?.password?.type === "required" && (
+                  <p className="mt-2 mx-1 text-red-600">
+                    Password must have to set.
+                  </p>
+                )}
                 <div
                   className="absolute right-2 top-[30px] inline-block cursor-pointer"
                   onClick={() => setShow(!show)}
@@ -156,11 +171,13 @@ const SignUp = () => {
                 </div>
               </div>
 
-              <input
-                className="btn w-full mt-4 bg-[#D1A054B3] hover:bg-[#D1A054B3] rounded"
-                type="submit"
-                value="Sign Up"
-              />
+              <button className="btn w-full mt-4 bg-[#D1A054B3] hover:bg-[#D1A054B3] rounded">
+                {loading ? (
+                  <ImSpinner9 className="animate-spin text-lg"></ImSpinner9>
+                ) : (
+                  "Sign Up"
+                )}
+              </button>
             </form>
             <div className="w-2/3 mx-auto">
               <div className="my-4 text-center">
@@ -174,23 +191,7 @@ const SignUp = () => {
                   </Link>
                 </p>
                 <p>Or Sign Up With</p>
-                <div className="mt-4 flex justify-center items-center gap-16">
-                  <button className="btn btn-circle btn-outline btn-sm">
-                    <FaFacebookF></FaFacebookF>
-                  </button>
-                  <button
-                    onClick={handleGoogle}
-                    className="btn btn-circle btn-outline btn-sm"
-                  >
-                    <FaGoogle></FaGoogle>
-                  </button>
-                  <button
-                    onClick={handleGithub}
-                    className="btn btn-circle btn-outline btn-sm"
-                  >
-                    <FaGithub></FaGithub>
-                  </button>
-                </div>
+                <SocialLogin></SocialLogin>
               </div>
             </div>
           </div>

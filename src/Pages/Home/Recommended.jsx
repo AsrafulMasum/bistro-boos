@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react";
 import Title from "../../Components/Shared/Title";
 import MenuCard from "../../Components/Shared/MenuCard";
 import LayoutContainer from "../../Layout/LayoutComponent/LayoutContainer";
+import useLoadPublicData from "../../Hooks/useLoadPublicData";
 
 const Recommended = () => {
-  const [allMenus, setAllMenus] = useState([]);
-  useEffect(() => {
-    fetch("/menu.json")
-      .then((res) => res.json())
-      .then((data) => setAllMenus(data));
-  }, []);
 
-  const offer = allMenus.filter((menu) => menu?.category === "offered");
+  const url = "/menus?category=offered"
+  const {data: offer} = useLoadPublicData(url)
 
   return (
     <div className="my-20">

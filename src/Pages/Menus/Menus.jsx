@@ -1,24 +1,23 @@
-import { useEffect, useState } from "react";
 import Button from "../../Components/Shared/Button";
 import SectionBanner from "../../Components/Shared/SectionBanner";
 import LayoutContainer from "../../Layout/LayoutComponent/LayoutContainer";
 import mainImg from "../../assets/menu/banner3.jpg";
 import Offer from "./Offer";
 import MenuSec from "./MenuSec";
+import useLoadPublicData from "../../Hooks/useLoadPublicData";
 
 const Menus = () => {
+  const saladUrl = "/menus?category=salad";
+  const { data: saladMenu } = useLoadPublicData(saladUrl);
 
-  const [allMenus, setAllMenus] = useState([]);
-  useEffect(() => {
-    fetch("/menu.json")
-      .then((res) => res.json())
-      .then((data) => setAllMenus(data));
-  }, []);
+  const dessertUrl = "/menus?category=dessert";
+  const { data: dessertMenu } = useLoadPublicData(dessertUrl);
 
-  const dessertMenu = allMenus.filter((menu) => menu?.category === "dessert");
-  const soupMenu = allMenus.filter((menu) => menu?.category === "soup");
-  const saladMenu = allMenus.filter((menu) => menu?.category === "salad");
-  const pizzaMenu = allMenus.filter((menu) => menu?.category === "pizza");
+  const soupUrl = "/menus?category=soup";
+  const { data: soupMenu } = useLoadPublicData(soupUrl);
+
+  const pizzaUrl = "/menus?category=pizza";
+  const { data: pizzaMenu } = useLoadPublicData(pizzaUrl);
 
   return (
     <div className="text-center mb-10">
